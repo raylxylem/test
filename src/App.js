@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PokemonProfile from './components/PokemonProfile';
 import PokemonList from './components/PokemonList';
 
@@ -8,13 +8,13 @@ function App() {
   const [pokemon, setPokemon] = useState();
   const [page, setPage] = useState(1);
 
-  async function getPokemonList(){
+  const getPokemonList = useCallback(async ()=>{
     await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${10 * page}&limit=10`).then((res)=>{
       res.json().then((data)=>{
         setPokemonList(data.results)
       })
     })
-  }
+  }, [page])
 
   async function getPokemon(pokemonName){
     await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`).then((res)=>{
@@ -26,7 +26,7 @@ function App() {
 
   useEffect(()=>{
     getPokemonList()
-  }, [page])
+  },[getPokemonList])
 
   return (
     <div>
